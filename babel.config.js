@@ -4,6 +4,7 @@ module.exports = {
   plugins: [["module-resolver", {
     root: ["./"],
     extensions: [".js", ".ts", ".tsx", ".jsx"],
+    plugins: ['module:react-native-dotenv'],
 
     alias: {
       "@": "./",

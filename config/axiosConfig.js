@@ -1,5 +1,6 @@
 import axios from "axios";
 
 export default axios.create({
-    baseURL: import.meta.env.VITE_BACKEND_API_URL
+    baseURL: "http://192.168.111.120:3000/api/v1",
+    timeout: 5000
 })
