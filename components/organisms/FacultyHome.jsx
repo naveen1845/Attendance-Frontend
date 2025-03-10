@@ -1,52 +1,58 @@
-import { StyleSheet, Text, View, FlatList, TouchableOpacity, StatusBar } from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View, FlatList, TouchableOpacity, StatusBar, ActivityIndicator } from 'react-native'
+import React, { useState } from 'react'
+import useFetchAllFacultyCourses from '@/hooks/api/courses/useFetchAllFacultyCourses'
+import { RefreshControl } from 'react-native-gesture-handler';
+import CreateCourseButton from '../molecules/CreateCourseButton/CreateCourseButton';
+import { useNavigation } from '@react-navigation/native';
 
 const FacultyHome = () => {
-    const courses = [
-        { id: '1', name: 'Operating Systems' },
-        { id: '2', name: 'Data Structures' },
-        { id: '3', name: 'Database Management' },
-        { id: '4', name: 'Computer Networks' },
-        { id: '5', name: 'Software Engineering' },
-        { id: '6', name: 'Artificial Intelligence' },
-        { id: '7', name: 'Machine Learning' },
-        { id: '8', name: 'Cyber Security' },
-        { id: '9', name: 'Cloud Computing' },
-        { id: '10', name: 'Mobile App Development' },
-        { id: '11', name: 'Web Technologies' },
-        { id: '12', name: 'Blockchain Technology' }
-    ]
+  const [ refreshing, setRefreshing ] = useState(false);
+  const {isFetching, isSuccess, facultyCourses, refetch} = useFetchAllFacultyCourses();
+  const navigation = useNavigation();
     
+  const handleCoursePress = (courseId) => {
+    console.log(`Navigating to ${courseId}`)
+    navigation.navigate('Course', {courseId: courseId});
 
-  const handleCoursePress = (courseName) => {
-    console.log(`Navigating to ${courseName}`)
-    // Navigation logic can be added here
+  }
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await refetch();
+    setRefreshing(false);
   }
 
   return (
     <View style={styles.container}>
-      {/* Status Bar for better UI */}
       <StatusBar barStyle="light-content" backgroundColor="#0A0F24" />
 
-      {/* Header */}
+      
       <View style={styles.header}>
         <Text style={styles.headerText}>Courses</Text>
       </View>
 
-      {/* Course List */}
-      <FlatList
-        data={courses}
-        keyExtractor={(item) => item.id}
+      <CreateCourseButton />
+
+      {isFetching && refreshing && <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator size="large" color="#0000ff" />
+          <Text>Loading...</Text>
+      </View>}
+
+      
+      {isSuccess && !refreshing && <FlatList
+        data={facultyCourses}
+        keyExtractor={(item) => item._id}
         horizontal={false}
         renderItem={({ item }) => (
-          <TouchableOpacity style={styles.courseCard} onPress={() => handleCoursePress(item.name)}>
+          <TouchableOpacity style={styles.courseCard} onPress={() => handleCoursePress(item._id)}>
             <Text style={styles.courseText}>{item.name}</Text>
           </TouchableOpacity>
         )}
         contentContainerStyle={styles.courseList}
-      />
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+      />}
 
-      {/* Footer */}
+      
       <View style={styles.footer}>
         <Text style={styles.footerText}>© 2025 Attendance - Naveen</Text>
       </View>

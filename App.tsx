@@ -9,9 +9,8 @@ import LoginScreen from './screens/auth/LoginScreen';
 import FacultyHome from './components/organisms/FacultyHome';
 import { AppContextProvider } from './contexts/AppContextProvider';
 import { ProtectedScreens } from './components/molecules/ProtectedScreen';
+import CourseScreen from './screens/course/CourseScreen';
  
-
-
 export default function App() {
   const Stack = createStackNavigator();
   const queryClient = new QueryClient();
@@ -24,6 +23,7 @@ export default function App() {
 
             <Stack.Screen name='Login' component={LoginScreen} options={{headerShown: false}}/>
             <Stack.Screen name='Signup' component={SignupScreen} options={{headerShown: false}}/>
+            <Stack.Screen name='Course' component={CourseScreen} options={{headerShown: false}} />
 
             <Stack.Screen 
               name='FacultyScreen'
@@ -44,17 +44,3 @@ export default function App() {
       
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#222',
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  text: {
-    color: '#fff', // White text for contrast
-    fontSize: 34
-
-  }
-})
