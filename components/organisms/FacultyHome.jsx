@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, FlatList, TouchableOpacity, StatusBar, ActivityIndicator } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import useFetchAllFacultyCourses from '@/hooks/api/courses/useFetchAllFacultyCourses'
 import { RefreshControl } from 'react-native-gesture-handler';
 import CreateCourseButton from '../molecules/CreateCourseButton/CreateCourseButton';
@@ -10,9 +10,9 @@ const FacultyHome = () => {
   const {isFetching, isSuccess, facultyCourses, refetch} = useFetchAllFacultyCourses();
   const navigation = useNavigation();
     
-  const handleCoursePress = (courseId) => {
+  const handleCoursePress = (courseId, courseName) => {
     console.log(`Navigating to ${courseId}`)
-    navigation.navigate('Course', {courseId: courseId});
+    navigation.navigate('Course', {courseId: courseId, courseName: courseName});
 
   }
 
@@ -44,7 +44,7 @@ const FacultyHome = () => {
         keyExtractor={(item) => item._id}
         horizontal={false}
         renderItem={({ item }) => (
-          <TouchableOpacity style={styles.courseCard} onPress={() => handleCoursePress(item._id)}>
+          <TouchableOpacity style={styles.courseCard} onPress={() => handleCoursePress(item._id, item.name)}>
             <Text style={styles.courseText}>{item.name}</Text>
           </TouchableOpacity>
         )}
@@ -70,7 +70,8 @@ const styles = StyleSheet.create({
   },
   header: {
     backgroundColor: '#161B33', // Darker shade for contrast
-    paddingVertical: 20,
+    paddingVertical: 10,
+    paddingTop: 40,
     alignItems: 'center',
     elevation: 6,
     borderBottomWidth: 2,
@@ -117,6 +118,7 @@ const styles = StyleSheet.create({
   footer: {
     backgroundColor: '#161B33',
     paddingVertical: 10,
+    paddingBottom: 20,
     alignItems: 'center',
     marginTop: 'auto',
     borderTopWidth: 2,
