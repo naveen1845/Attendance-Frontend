@@ -10,6 +10,7 @@ import FacultyHome from './components/organisms/FacultyHome';
 import { AppContextProvider } from './contexts/AppContextProvider';
 import { ProtectedScreens } from './components/molecules/ProtectedScreen';
 import CourseScreen from './screens/course/CourseScreen';
+import AttendanceDetailsScreen from './screens/attendance/AttendanceDetailsScreen';
  
 export default function App() {
   const Stack = createStackNavigator();
@@ -38,6 +39,15 @@ export default function App() {
             >
               {() => (
                 <ProtectedScreens><FacultyHome /></ProtectedScreens>
+              )}
+            </Stack.Screen>
+
+            <Stack.Screen 
+              name='AttendanceDetailsScreen'
+              options={{headerShown: false}}
+            >
+              {() => (
+                <ProtectedScreens><AttendanceDetailsScreen /></ProtectedScreens>
               )}
             </Stack.Screen>
 

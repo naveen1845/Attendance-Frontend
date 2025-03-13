@@ -1,6 +1,6 @@
 import { View, Text, FlatList, ActivityIndicator, StyleSheet, TouchableOpacity } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import useFetchCourseAttendaceRecords from '@/hooks/api/attendance/useFetchCourseAttendaceRecords';
 import { RefreshControl } from 'react-native-gesture-handler';
 import CourseStudentsModal from '@/components/molecules/CourseStudentsModal/CourseStudentModal';
@@ -9,28 +9,10 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 const CourseScreen = () => {
   const route = useRoute();
   const { courseId, courseName } = route.params;
+  const navigation = useNavigation();
   const [ refreshing, setRefreshing ] = useState(false);
 
   const { isSuccess, isFetching, error, refetch, courseAttendance} = useFetchCourseAttendaceRecords(courseId);
-
-  const students = [
-    { id: "1", name: "John Doe", email: "john@example.com" },
-    { id: "2", name: "Jane Smith", email: "jane@example.com" },
-    { id: "3", name: "Jane Smith", email: "jane@example.com" },
-    { id: "4", name: "Jane Smith", email: "jane@example.com" },
-    { id: "5", name: "Jane Smith", email: "jane@example.com" },
-    { id: "6", name: "Jane Smith", email: "jane@example.com" },
-    { id: "7", name: "Jane Smith", email: "jane@example.com" },
-    { id: "8", name: "Jane Smith", email: "jane@example.com" },
-    { id: "9", name: "Jane Smith", email: "jane@example.com" },
-    { id: "10", name: "Jane Smith", email: "jane@example.com" },
-    { id: "11", name: "Jane Smith", email: "jane@example.com" },
-    { id: "13", name: "Jane Smith", email: "jane@example.com" },
-    { id: "14", name: "Jane Smith", email: "jane@example.com" },
-    { id: "15", name: "Jane Smith", email: "jane@example.com" },
-    { id: "16", name: "Jane Smith", email: "jane@example.com" },
-    { id: "17", name: "Jane Smith", email: "jane@example.com" },
-    ];
 
     const onRefresh = async () => {
         setRefreshing(true);
@@ -38,10 +20,14 @@ const CourseScreen = () => {
         setRefreshing(false);
     }
 
+    const handleCourseClick = (attendanceId) => {
+        navigation.navigate('AttendanceDetailsScreen', {attendanceId: attendanceId})
+    }
+
   return (
     <View style={styles.container}>
         <View style={styles.header}>
-            <CourseStudentsModal students={students} courseId={courseId}/>
+            <CourseStudentsModal courseId={courseId}/>
             <Text style={styles.headerText}>{courseName}</Text>
             <FontAwesome name='ellipsis-h' size={24} color="white" style={{ fontfamily: 'FontAwesome'}}/>
         </View>
@@ -55,7 +41,7 @@ const CourseScreen = () => {
         data={courseAttendance}
         keyExtractor={(item) => item._id}
         renderItem={({ item }) => (
-          <TouchableOpacity  style={styles.attendanceCard}>
+          <TouchableOpacity  style={styles.attendanceCard} onPress={() => handleCourseClick(item?._id)}>
             <Text style={styles.dateText}>{new Date(item.date).toDateString()}</Text>
             <Text style={styles.statusText}>{`Attendance - ${item.students.filter(s => s.isPresent).length} / ${item.students.length}`}</Text>
           </TouchableOpacity>

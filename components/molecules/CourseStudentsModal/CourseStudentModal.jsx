@@ -5,7 +5,7 @@ import { RefreshControl } from "react-native-gesture-handler";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import AddStudentsModal from "../AddStudentsModal/AddStudentsModal";
 
-const CourseStudentsModal = ({ courseId, students }) => {
+const CourseStudentsModal = ({ courseId }) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [ refreshing, setRefreshing ] = useState(false);
 
