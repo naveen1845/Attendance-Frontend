@@ -55,3 +55,17 @@ export const updateAttendanceRequest = async ({token, attendanceId, studentsAtte
         throw error;
     }
 }
+
+export const createAttendaceRequest = async ({token, courseId}) => {
+    try {
+        const response = axios.post('/attendance/create', {courseId: courseId}, {
+            headers: {
+                'x-access-token': token
+            }
+        })
+        return response;
+    } catch (error) {
+        console.log(error);
+        throw error
+    }
+}

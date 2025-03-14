@@ -123,7 +123,8 @@ const styles = StyleSheet.create({
         color: "#FFD700",
     },
     studentEmail: {
-        fontSize: 14,
+        marginTop: 2,
+        fontSize: 12,
         color: "white",
     },
     closeBtn: {

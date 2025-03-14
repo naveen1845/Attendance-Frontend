@@ -16,7 +16,7 @@ const CreateCourseButton = () => {
         queryClient.invalidateQueries(`facultyCourses`);
       }
     } catch (error) {
-      console.log("error creating course (from modal): ", dataTagErrorSymbol);
+      console.log("error creating course (from modal): ", er);
       
     }finally{
       setModalVisible(false);
