@@ -11,6 +11,7 @@ import { AppContextProvider } from './contexts/AppContextProvider';
 import { ProtectedScreens } from './components/molecules/ProtectedScreen';
 import CourseScreen from './screens/course/CourseScreen';
 import AttendanceDetailsScreen from './screens/attendance/AttendanceDetailsScreen';
+import StudentAttendanceDetails from './screens/studentAttendanceDetails/StudentAttendanceDetails';
  
 export default function App() {
   const Stack = createStackNavigator();
@@ -48,6 +49,15 @@ export default function App() {
             >
               {() => (
                 <ProtectedScreens><AttendanceDetailsScreen /></ProtectedScreens>
+              )}
+            </Stack.Screen>
+
+            <Stack.Screen 
+              name='StudentAttendanceDetails'
+              options={{headerShown: false}}
+            >
+              {() => (
+                <ProtectedScreens><StudentAttendanceDetails /></ProtectedScreens>
               )}
             </Stack.Screen>
 

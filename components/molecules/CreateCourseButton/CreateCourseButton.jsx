@@ -1,5 +1,5 @@
 import useCreateCourse from "@/hooks/api/courses/useCreateCourse";
-import { dataTagErrorSymbol, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { View, Text, TextInput, Modal, TouchableOpacity, StyleSheet } from "react-native";
 
@@ -27,7 +27,7 @@ const CreateCourseButton = () => {
   return (
     <View>
       {/* Button to Open Dialog */}
-      <TouchableOpacity style={styles.createButton} onPress={() => setModalVisible(true)}>
+      <TouchableOpacity style={styles.button} onPress={() => setModalVisible(true)}>
         <Text style={styles.buttonText}>Create Course</Text>
       </TouchableOpacity>
 
@@ -76,6 +76,20 @@ const styles = StyleSheet.create({
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.3,
       shadowRadius: 4,
+    },
+    button: {
+      position: "absolute",
+      bottom: 10, // Adjust as needed
+      alignSelf: "center", // Centers it horizontally
+      paddingVertical: 12,
+      paddingHorizontal: 30,
+      borderRadius: 8,
+      backgroundColor: "#FFD700",
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.3,
+      shadowRadius: 4,
+      elevation: 5, // For Android shadow
     },
     buttonText: {
       color: "#0A0F24", // Deep dark blue for contrast

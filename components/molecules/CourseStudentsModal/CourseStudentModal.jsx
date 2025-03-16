@@ -4,10 +4,14 @@ import { Modal, View, Text, FlatList, TouchableOpacity, StyleSheet, ActivityIndi
 import { RefreshControl } from "react-native-gesture-handler";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import AddStudentsModal from "../AddStudentsModal/AddStudentsModal";
+import { useNavigation } from "@react-navigation/native";
 
-const CourseStudentsModal = ({ courseId }) => {
+const CourseStudentsModal = ({ courseId, attendaceData }) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [ refreshing, setRefreshing ] = useState(false);
+    const navigation = useNavigation();
+
+    
 
     const { isFetching, isSuccess, error, courseDetails, refetch} = useFetchCourseWithStudentDetails(courseId);
 
@@ -16,6 +20,10 @@ const CourseStudentsModal = ({ courseId }) => {
         await refetch();
         setRefreshing(false);
     }
+
+    const openStudentDetailsScreen = (studentId) => {
+        navigation.navigate('StudentAttendanceDetails', {studentId: studentId, attendanceData: attendaceData});
+    }   
 
     return (
         <>
@@ -50,13 +58,13 @@ const CourseStudentsModal = ({ courseId }) => {
                                     data={courseDetails?.students}
                                     keyExtractor={(item) => item._id}
                                     renderItem={({ item }) => (
-                                        <View style={styles.studentItem}>
+                                        <TouchableOpacity style={styles.studentItem} onPress={() => openStudentDetailsScreen(item._id)}>
                                             <Text style={styles.studentName}>{item.name}</Text>
                                             <View style={{flexDirection: 'row'}}>
                                                 <Text style={styles.studentEmail}>{item.roll_no} | </Text>
                                                 <Text style={styles.studentEmail}>{item.email}</Text>
                                             </View>
-                                        </View>
+                                        </TouchableOpacity>
                                     )}
                                     refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
                                 />

@@ -1,9 +1,9 @@
 
 import axios from "@/config/axiosConfig";
 
-export const getCourseAttendanceRecordsRequest = async ({token, courseId}) => {
+export const getCourseAttendanceRecordsRequest = async ({token, courseId, startDate, endDate}) => {
     try {
-        const response = await axios.get('/attendance', {
+        const response = await axios.post('/attendance', { startDate: startDate, endDate: endDate} ,{
             headers: {
                 'x-access-token' : token
             },

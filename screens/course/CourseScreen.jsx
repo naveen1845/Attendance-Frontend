@@ -7,6 +7,8 @@ import CourseStudentsModal from '@/components/molecules/CourseStudentsModal/Cour
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import useCreateAttendance from '@/hooks/api/attendance/useCreateAttendance';
 import { useQueryClient } from '@tanstack/react-query';
+import Sidebar from '@/components/molecules/AttendanceSidebar/AttendanceSidebar';
+import FilterModal from '@/components/molecules/FilterAttendanceModal/FilterAttendanceModal';
 
 const CourseScreen = () => {
   const route = useRoute();
@@ -14,8 +16,11 @@ const CourseScreen = () => {
   const { courseId, courseName } = route.params;
   const navigation = useNavigation();
   const [ refreshing, setRefreshing ] = useState(false);
+  const [sidebarVisibility, setSidebarVisibililty] = useState(false);
+  const [startDate, setStartDate] = useState(new Date(0));
+  const [endDate, setEndDate] = useState(new Date().setHours(23,59,59,59));
 
-  const { isSuccess, isFetching, error, refetch, courseAttendance} = useFetchCourseAttendaceRecords(courseId);
+  const { isSuccess, isFetching, error, refetch, courseAttendance} = useFetchCourseAttendaceRecords(courseId, startDate, endDate);
 
   const { createAttendanceMutation } = useCreateAttendance(courseId);
 
@@ -31,10 +36,11 @@ const CourseScreen = () => {
 
     const handleCreateAttendance = async () => {
       try {
-        console.log(queryClient.getQueryData(`course-Attendance-${courseId}`));
+        console.log(queryClient.getQueryData([`course-Attendance-${courseId}`]));
+        console.log("Active queries:", queryClient.getQueryCache().queries);
 
         await createAttendanceMutation();
-        queryClient.invalidateQueries(`course-Attendance-${courseId}`);
+        queryClient.invalidateQueries([`course-Attendance-${courseId}`]);
       } catch (error) {
         console.log(error);
         
@@ -42,13 +48,40 @@ const CourseScreen = () => {
 
     }
 
+    const onApplyFilter = async (start, end) => {
+      setStartDate(start);
+      setEndDate(end);
+      await refetch();
+    }
+
+    const onReset = async () => {
+      setStartDate(new Date('2025-01-01'));
+      setEndDate(new Date());
+      await refetch();
+    }
+
+    const onClose = () => setSidebarVisibililty(false);
+
   return (
     <View style={styles.container}>
         <View style={styles.header}>
-            <CourseStudentsModal courseId={courseId}/>
+            <CourseStudentsModal courseId={courseId} attendaceData={courseAttendance}/>
             <Text style={styles.headerText}>{courseName}</Text>
-            <FontAwesome name='ellipsis-h' size={24} color="white" style={{ fontfamily: 'FontAwesome'}}/>
+
+            <View style={{flexDirection: "row", gap: 20}}>
+              <FilterModal onApplyFilter={onApplyFilter} onResetFilter={onReset}/>
+  
+              <TouchableOpacity onPress={() => setSidebarVisibililty(true)}>
+                <FontAwesome name='bars' size={24} color="white" style={{ fontfamily: 'FontAwesome'}}/>
+              </TouchableOpacity>
+            </View>
+
         </View>
+
+        
+        <Sidebar isVisible={sidebarVisibility} onClose={onClose} courseAttendance={courseAttendance}/>
+        
+          
 
       {isFetching && refreshing && <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                 <ActivityIndicator size="large" color="#0000ff" />
@@ -105,7 +138,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     color: '#FFD700', // Gold for premium feel
-    fontSize: 20,
+    fontSize: 15,
     fontWeight: 'bold',
     textTransform: 'uppercase'
   },
@@ -156,7 +189,7 @@ const styles = StyleSheet.create({
   },
   button: {
     position: "absolute",
-    bottom: 60, // Adjust as needed
+    bottom: 53, // Adjust as needed
     alignSelf: "center", // Centers it horizontally
     paddingVertical: 12,
     paddingHorizontal: 30,

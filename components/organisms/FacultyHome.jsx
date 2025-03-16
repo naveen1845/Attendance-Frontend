@@ -31,7 +31,7 @@ const FacultyHome = () => {
         <Text style={styles.headerText}>Courses</Text>
       </View>
 
-      <CreateCourseButton />
+      
 
       {isFetching && refreshing && <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator size="large" color="#0000ff" />
@@ -52,7 +52,8 @@ const FacultyHome = () => {
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       />}
 
-      
+          <CreateCourseButton />
+          
       <View style={styles.footer}>
         <Text style={styles.footerText}>© 2025 Attendance - Naveen</Text>
       </View>
