@@ -12,6 +12,7 @@ import { ProtectedScreens } from './components/molecules/ProtectedScreen';
 import CourseScreen from './screens/course/CourseScreen';
 import AttendanceDetailsScreen from './screens/attendance/AttendanceDetailsScreen';
 import StudentAttendanceDetails from './screens/studentAttendanceDetails/StudentAttendanceDetails';
+import Analytics from './screens/studentAttendanceDetails/Analytics.jsx';
  
 export default function App() {
   const Stack = createStackNavigator();
@@ -58,6 +59,15 @@ export default function App() {
             >
               {() => (
                 <ProtectedScreens><StudentAttendanceDetails /></ProtectedScreens>
+              )}
+            </Stack.Screen>
+
+            <Stack.Screen 
+              name='AnalyticsScreen'
+              options={{headerShown: false}}
+            >
+              {() => (
+                <ProtectedScreens><Analytics /></ProtectedScreens>
               )}
             </Stack.Screen>
 

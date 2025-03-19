@@ -57,8 +57,13 @@ const CourseStudentsModal = ({ courseId, attendaceData }) => {
                                 <FlatList
                                     data={courseDetails?.students}
                                     keyExtractor={(item) => item._id}
-                                    renderItem={({ item }) => (
-                                        <TouchableOpacity style={styles.studentItem} onPress={() => openStudentDetailsScreen(item._id)}>
+                                    renderItem={({ item, index }) => (
+                                        <TouchableOpacity 
+                                          style={[
+                                            styles.studentItem,
+                                            index === courseDetails?.students.length - 1 && { borderBottomWidth: 0 }
+                                          ]} 
+                                          onPress={() => openStudentDetailsScreen(item._id)}>
                                             <Text style={styles.studentName}>{item.name}</Text>
                                             <View style={{flexDirection: 'row'}}>
                                                 <Text style={styles.studentEmail}>{item.roll_no} | </Text>

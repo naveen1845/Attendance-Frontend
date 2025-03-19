@@ -144,6 +144,7 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     padding: 15,
+    paddingBottom: 55
   },
   attendanceCard: {
     backgroundColor: '#1C2541',

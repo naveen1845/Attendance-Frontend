@@ -5,12 +5,14 @@ import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-na
 import FilterModal from '../FilterAttendanceModal/FilterAttendanceModal';
 import GenerateAttendanceReport from '../GenerateReports/GenerateAttendanceReport';
 import GenerateStudentAttendanceList from '../GenerateReports/GenerateStudentAttendanceList';
+import { useNavigation } from '@react-navigation/native';
 
 const { width } = Dimensions.get('window');
 
-const Sidebar = ({ isVisible, onClose, onDownloadPress, onGraphPress, onFilterPress, courseAttendance }) => {
+const Sidebar = ({ isVisible, onClose, courseAttendance }) => {
     const [filterVisibility, setFilterVisibility] = useState(false);
     const [showDownloadOptions, setShowDownloadOptions] = useState(false);
+    const navigation = useNavigation();
   
     const translateX = useSharedValue(isVisible ? 0 : width); // Start offscreen
   
@@ -21,6 +23,10 @@ const Sidebar = ({ isVisible, onClose, onDownloadPress, onGraphPress, onFilterPr
     const animatedStyle = useAnimatedStyle(() => ({
       transform: [{ translateX: translateX.value }],
     }));
+
+    const onAnalyticsPress = () => {
+      navigation.navigate('AnalyticsScreen', {data: courseAttendance})
+    }
     
   
     return (
@@ -31,9 +37,6 @@ const Sidebar = ({ isVisible, onClose, onDownloadPress, onGraphPress, onFilterPr
   
         <Text style={styles.sidebarTitle}>Options</Text>
   
-        <TouchableOpacity style={styles.option} onPress={onFilterPress}>
-          <Text style={styles.optionText}>Add Filters</Text>
-        </TouchableOpacity>
   
         <TouchableOpacity
           style={styles.option}
@@ -52,8 +55,8 @@ const Sidebar = ({ isVisible, onClose, onDownloadPress, onGraphPress, onFilterPr
         )}
   
   
-        <TouchableOpacity style={styles.option} onPress={onGraphPress}>
-          <Text style={styles.optionText}>Show Analytical Graphs</Text>
+        <TouchableOpacity style={styles.option} onPress={onAnalyticsPress}>
+          <Text style={styles.optionText}>Analytics</Text>
         </TouchableOpacity>
       </Animated.View>
     );
