@@ -12,7 +12,7 @@ export const ProtectedScreens = ({children}) => {
     const [shouldRedirect, setShouldRedirect] = useState(false);
 
     useEffect(() => {
-        if(!auth.isLoading && (!auth.user && !auth.token)){
+        if(!auth.isLoading && (!auth.user || !auth.token)){
             Toast.show({
                 type: 'error',
                 text1: 'Session Over',
@@ -20,10 +20,10 @@ export const ProtectedScreens = ({children}) => {
                 visibilityTime: 3000,
                 position: 'top',
             })
-
             setShouldRedirect(true);
+            navigation.reset({ index: 0, routes: [{ name: "Login" }] });
         }
-    }, [])
+    }, [auth, navigation])
 
     if (auth.isLoading) {
         return (
@@ -34,9 +34,12 @@ export const ProtectedScreens = ({children}) => {
         );
     }
 
-    if (shouldRedirect) {
-        navigation.navigate("Login");
-    }
+    // useEffect(() => {
+    //     if (shouldRedirect) {
+    //         navigation.reset({ index: 0, routes: [{ name: "Login" }] }); // Ensure back button doesn't take user back
+    //     }
+    // }, [shouldRedirect]);
+    
 
     return children;
 }

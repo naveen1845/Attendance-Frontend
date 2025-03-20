@@ -4,6 +4,7 @@ import useFetchAllFacultyCourses from '@/hooks/api/courses/useFetchAllFacultyCou
 import { RefreshControl } from 'react-native-gesture-handler';
 import CreateCourseButton from '../molecules/CreateCourseButton/CreateCourseButton';
 import { useNavigation } from '@react-navigation/native';
+import LogoutButton from '../molecules/LogoutButton/LogoutButton';
 
 const FacultyHome = () => {
   const [ refreshing, setRefreshing ] = useState(false);
@@ -29,6 +30,7 @@ const FacultyHome = () => {
       
       <View style={styles.header}>
         <Text style={styles.headerText}>Courses</Text>
+        <LogoutButton />
       </View>
 
       

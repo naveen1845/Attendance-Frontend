@@ -6,6 +6,7 @@ import FilterModal from '../FilterAttendanceModal/FilterAttendanceModal';
 import GenerateAttendanceReport from '../GenerateReports/GenerateAttendanceReport';
 import GenerateStudentAttendanceList from '../GenerateReports/GenerateStudentAttendanceList';
 import { useNavigation } from '@react-navigation/native';
+import DeleteModal from '../DeleteModal/DeleteModal';
 
 const { width } = Dimensions.get('window');
 
@@ -26,6 +27,10 @@ const Sidebar = ({ isVisible, onClose, courseAttendance }) => {
 
     const onAnalyticsPress = () => {
       navigation.navigate('AnalyticsScreen', {data: courseAttendance})
+    }
+
+    const handleDelete = async () => {
+
     }
     
   
@@ -58,6 +63,8 @@ const Sidebar = ({ isVisible, onClose, courseAttendance }) => {
         <TouchableOpacity style={styles.option} onPress={onAnalyticsPress}>
           <Text style={styles.optionText}>Analytics</Text>
         </TouchableOpacity>
+
+        <View style={{...styles.option, marginTop: "auto", marginBottom: 22}}><DeleteModal title={'course'} handleDelete={handleDelete}><Text style={styles.optionText}>Delete Course</Text></DeleteModal></View>
       </Animated.View>
     );
   };

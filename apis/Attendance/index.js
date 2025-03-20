@@ -69,3 +69,17 @@ export const createAttendaceRequest = async ({token, courseId}) => {
         throw error
     }
 }
+
+export const deleteAttendanceRequest = async ({ token, attendanceId }) => {
+    try {
+        const response = await axios.delete(`/attendance/${attendanceId}`, {
+            headers: {
+                'x-access-token': token
+            }
+        })
+        return response
+    } catch (error) {
+        console.log(error);
+        throw error
+    }
+}

@@ -1,10 +1,11 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
 import { createContext, useEffect, useState } from "react";
 
 const AuthContext = createContext();
 
 export const AuthContextProvider = ({children}) => {
-
+    const navigation = useNavigation();
     const [ auth, setAuth ] = useState({
         user: null,
         token: null,
@@ -20,7 +21,7 @@ export const AuthContextProvider = ({children}) => {
                 if (user && token) {
                     setAuth({
                         user: JSON.parse(user),
-                        token,
+                        token: token,
                         isLoading: false
                     });
                 } else {
@@ -38,10 +39,20 @@ export const AuthContextProvider = ({children}) => {
     
         loadAuthData();
     }, []);
+
+    const logout = async () => {
+        await AsyncStorage.removeItem('user');
+        await AsyncStorage.removeItem('token')
+        setAuth({
+            user: null,
+            token: null,
+            isLoading: false
+        })
+    }
     
 
     return(
-        <AuthContext.Provider value={{ auth, setAuth }}>
+        <AuthContext.Provider value={{ auth, setAuth, logout }}>
             {children}
         </AuthContext.Provider>
     )

@@ -31,7 +31,7 @@ const CourseScreen = () => {
     }
 
     const handleCourseClick = (attendanceId) => {
-        navigation.navigate('AttendanceDetailsScreen', {attendanceId: attendanceId})
+        navigation.navigate('AttendanceDetailsScreen', {attendanceId: attendanceId, courseId: courseId})
     }
 
     const handleCreateAttendance = async () => {

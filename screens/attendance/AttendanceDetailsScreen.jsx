@@ -1,15 +1,19 @@
+
 import useFetchAttendaceDetails from "@/hooks/api/attendance/useFetchAttendaceDetails";
 import useUpdateAttendance from "@/hooks/api/attendance/useUpdateAttendance";
-import { useRoute } from "@react-navigation/native";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { useQueryClient } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 import { View, Text, FlatList, TouchableOpacity, StyleSheet } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import DeleteModal from "@/components/molecules/DeleteModal/DeleteModal";
+import useDeleteAttendance from "@/hooks/api/attendance/useDeleteAttendance";
 
 const AttendanceDetailsScreen = () => {
     const route = useRoute();
     const queryClient = useQueryClient();
-    const { attendanceId } = route.params;
+    const { attendanceId, courseId } = route.params;
 
     const { isFetching, error, isSuccess, attendanceDetails: attendanceRecord } = useFetchAttendaceDetails(attendanceId);
     const { updateAttendanceMutation } = useUpdateAttendance(attendanceId);
@@ -17,11 +21,20 @@ const AttendanceDetailsScreen = () => {
     const [attendance, setAttendance] = useState([]);
     const [isEditing, setIsEditing] = useState(false);
 
+    const { isPending, deleteAttendanceMutation} = useDeleteAttendance(attendanceId)
+    const navigation = useNavigation();
+
     useEffect(() => {
         if (isSuccess) {
             setAttendance(attendanceRecord?.students);
         }
     }, [attendanceRecord]);
+
+    const handleDelete = async () => {
+            await deleteAttendanceMutation();
+            queryClient.invalidateQueries([`course-Attendance-${courseId}`]);
+            navigation.goBack();
+    }
 
     const toggleAttendance = (studentId) => {
         setAttendance(prevAttendance =>
@@ -44,8 +57,12 @@ const AttendanceDetailsScreen = () => {
         <View style={styles.container}>
             {/* Header */}
             <View style={styles.header}>
-                <Text style={styles.headerText}>{attendanceRecord?.course?.name}</Text>
-                <Text style={styles.dateText}>{new Date(attendanceRecord?.date).toDateString()}</Text>
+                <FontAwesome name='qrcode' size={24} color="white" style={{ fontfamily: 'FontAwesome'}}/> 
+                <View style={styles.headerTextContainer}>
+                    <Text style={styles.headerText}>{attendanceRecord?.course?.name}</Text>
+                    <Text style={styles.dateText}>{new Date(attendanceRecord?.date).toDateString()}</Text>
+                </View>
+                <DeleteModal title={'attendance'} handleDelete={handleDelete} isPending={isPending}/>
             </View>
 
             {/* Attendance List */}
@@ -103,7 +120,7 @@ const styles = StyleSheet.create({
     header: {
         backgroundColor: "#161B33",
         paddingBottom: 15,
-        flexDirection: "column",
+        flexDirection: "row",
         justifyContent: "space-between",
         paddingTop: 40,
         marginBottom: 10,
@@ -118,6 +135,9 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: "bold",
         textTransform: "uppercase",
+    },
+    headerTextContainer: {
+        alignItems:'center'
     },
     dateText: {
         color: "#FFD700",
